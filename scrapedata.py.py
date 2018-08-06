@@ -55,11 +55,29 @@ class ScrapeData(object):
         plt.figure(figsize=(12,6))
         word_dist.plot(60)
         
+     #for counting words
+    def word_count(self,dataa_list):
+        count = dict()
+        words = dataa_list.split()
+        for word in words:
+            if word in count:
+                count[word] += 1
+            else:
+                count[word] = 1
+        return count
+        
 if __name__=="__main__":
     ssd=ScrapeData()
-    scraped_data=ssd.urlparser('name of the url')
+    scraped_data=ssd.urlparser('http://mccormickml.com/2016/11/08/dbscan-clustering/')
     ssd.count_frequency(scraped_data)
     tokenized_word_list=ssd.tokenize_clean(scraped_data)
     ssd.visualize(tokenized_word_list)
+    #for writing words in to csv file
+    word_list=ssd.word_count(scraped_data)
+    with open('word_freqfile.csv', 'w') as f: 
+        wf = csv.writer(f)
+        wf.writerows(word_list.items())
+      
         
+
 
