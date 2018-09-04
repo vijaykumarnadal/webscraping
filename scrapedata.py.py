@@ -78,6 +78,58 @@ if __name__=="__main__":
         wf = csv.writer(f)
         wf.writerows(word_list.items())
       
+#date format logic
+#date format checker second solution
+import time
+import datetime
+import numpy
+import pandas as pd
+import csv
+import re
+
+outPutDateFormat = "%d/%m/%Y"
+datesample = pd.read_csv('set2.csv')
+dateslist = datesample["words"].values.astype(str).tolist()
+    
+
+
+def check_format(datec):    
+    format_ok = False
+    for mask in ['%Y%m%d','%Y-%m-%d','%d-%m-%Y','%m%d%Y','%A, %d, %B, %y','%d%m-%Y','%Y/%m/%d','%m/%d/%Y','%d/%m/%Y']:
+        try:
+            time.strptime(datec, mask)
+            format_ok = True
+            break
+        except ValueError:
+            pass
+    if format_ok:
+        date0=datetime.datetime.strptime(datec ,mask)
+        date1=datetime.date.strftime(date0, outPutDateFormat)
+        return date1
+    else:
+        return "incorrect date format" 
+    return None
+ 
+def main():
+    RE = r"(\d{1,2})(\/)*(\d{1,2})(\/)*(\d{2,4})"
+    f = open('datecorrections.csv', 'w')
+    datelist=[]
+    List_RE=['RE']
+    for date in dateslist:       
+        for pattern in List_RE:
+            regex = re.compile(eval(pattern))
+            m = regex.finditer(date)
+            if m :
+                for m1 in m:
+                    datelist.append(m1.group(0))
+    #print(datelist)
+    f = open('datecorrections.csv', 'w')
+    for date in datelist:
+        wf = csv.writer(f)
+        wf.writerow([date,check_format(date)])
         
+
+if __name__=="__main__":
+    main()
 
 
