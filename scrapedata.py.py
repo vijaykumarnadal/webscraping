@@ -133,3 +133,25 @@ if __name__=="__main__":
     main()
 
 
+#label checker
+import pandas as pd
+import csv
+
+#reading the data
+categories=['B-return_date','O']
+datesample = pd.read_csv('set2.csv')
+dateslist = datesample["labels"].values.astype(str).tolist()
+
+#lgc
+def returnMatches(a,b):
+    if a in b:
+        return a
+    else:
+        return "No match"
+f = open('datecorrections.csv', 'w')
+for date in dateslist:
+    wf = csv.writer(f)
+    wf.writerow([date,returnMatches(date,categories)])
+
+#if __name__=="__main__":
+returnMatches(categories,dateslist)
